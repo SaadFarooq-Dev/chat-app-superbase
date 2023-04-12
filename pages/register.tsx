@@ -1,11 +1,13 @@
 import supabase from "@/utils/supabase";
+import { useRouter } from "next/router";
 
 export default function Login (){
+  const router = useRouter();
   const handleSubmit =  async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const {email,username,password} =  Object.fromEntries(new FormData(e.currentTarget));
     if (typeof email === 'string' && typeof username === 'string'  && typeof password === 'string' ){
-      await supabase.auth.signUp(
+      const {data,error} = await supabase.auth.signUp(
         {
         email,
         password,
@@ -16,6 +18,12 @@ export default function Login (){
         }
       }
     )
+    if(error){
+      alert(error.message)
+      return
+    }
+    router.push('/login')
+
   }
   }
 

@@ -7,11 +7,17 @@ type Message = {
   profile_id: string,
   created_at: string,
   profile: {
+    id: string,
     username: string
   }
 }
 
-export default function Messages() {
+type MessagesProps = {
+  roomId: string
+}
+let profileCache: any = {}
+
+export default function Messages({roomId}: MessagesProps) {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [userId, setuserId] = useState('');
@@ -22,7 +28,7 @@ export default function Messages() {
   }
 
   const getData = async () => {
-    const { data, error } = await supabase.from('messages').select('*,profile: profiles(username)')
+    const { data, error } = await supabase.from('messages').select('*,profile: profiles(id,username)').match({room_id: roomId}).order('created_at')
     if (error) {
       console.error(error.message)
     }
@@ -30,7 +36,9 @@ export default function Messages() {
       alert('No data')
       return
     }
-
+    data.map(message => message.profile).forEach(profile => {
+      profileCache[profile.id] = profile
+    })
     setMessages(data as Message[])
   }
 
@@ -46,16 +54,22 @@ export default function Messages() {
   }, []);
 
   useEffect(() => {
-    const subscription = supabase.channel('any').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' },
+    const subscription = supabase.channel('any').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages',filter: `room_id=eq.${roomId}` },
     async payload => {
-      const {data, error} = await supabase.from('profiles').select('username').eq('id',payload.new.profile_id)
-      if(error){
-        alert(error.message)
-        console.error(error.message)
+      if(payload && profileCache[payload.new.profile_id]){
+        setMessages((prevMessages)=> [...prevMessages,{...payload.new, profile: profileCache[payload.new.profile_id]}] as Message[])
       }
-      if(data){
-        const newMessage = { ...payload.new, profile: data[0] };
-        setMessages((prevMessages)=> [...prevMessages,newMessage] as Message[])
+      else {
+        const {data, error} = await supabase.from('profiles').select('id, username').eq('id',payload.new.profile_id)
+        if(error){
+          alert(error.message)
+          console.error(error.message)
+        }
+        if(data){
+          profileCache[data[0].id] = data[0]
+          const newMessage = { ...payload.new, profile: data[0] };
+          setMessages((prevMessages)=> [...prevMessages,newMessage] as Message[])
+        }
       }
     }).subscribe()
     return () => {
