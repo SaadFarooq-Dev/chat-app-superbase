@@ -14,7 +14,6 @@ export default function MessageForm({roomId}: MessageFormProps) {
       if (error){
         console.error(error.message)
       }
-      // const { data, error } = await supabase.from('messages').insert({ content: message}).select('*')
     }
   }
 

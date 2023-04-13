@@ -49,7 +49,7 @@ export default function Messages({roomId}: MessagesProps) {
     }
   }
   useEffect(() => {
-    getUser()
+    getUser() 
     getData()
   }, []);
 
@@ -82,7 +82,7 @@ export default function Messages({roomId}: MessagesProps) {
 
 
   return (
-    <ul className="flex flex-1 flex-col justify-end p-4 space-y-2">
+<ul className="flex flex-1 flex-col justify-end p-4 space-y-2">
       {messages.map((item) => (
         <li key={item.id} className={item.profile_id === userId ? 'self-end bg-orange-100 rounded px-3 py-1': 'bg-slate-200 self-start rounded px-3 py-1'} >
           <span className="block text-xs text-gray-500 font-thin">{item.profile.username}</span>
