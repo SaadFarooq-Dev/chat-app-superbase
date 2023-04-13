@@ -1,16 +1,19 @@
 import supabase from "@/utils/supabase";
 
-export default function MessageForm() {
+type MessageFormProps = {
+  roomId: string
+}
+
+export default function MessageForm({roomId}: MessageFormProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { message } = Object.fromEntries(new FormData(e.currentTarget));
     if (typeof message === 'string' && message.trim().length !== 0) {
       e.currentTarget.reset()
-      const { data, error } = await supabase.from('messages').insert({ content: message}).select('*')
+      const { data, error } = await supabase.from('messages').insert({ content: message, room_id: roomId}).select('*')
       if (error){
         console.error(error.message)
       }
-      // const { data, error } = await supabase.from('messages').insert({ content: message}).select('*')
     }
   }
 

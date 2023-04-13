@@ -6,8 +6,6 @@ export default function Login (){
   const handleSubmit =  async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const {email,password} =  Object.fromEntries(new FormData(e.currentTarget));
-    console.log(email,password);
-
     if (typeof email === 'string' && typeof password === 'string' ){
       const {error} = await supabase.auth.signInWithPassword(
         {
