@@ -60,10 +60,10 @@ export default function Register({ session }: sessionProps) {
         <div className='max-w-md mx-auto my-10'>
           <div className='text-center'>
             <h1 className='my-3 text-3xl font-semibold text-gray-700 dark:text-gray-200'>
-              Sign in
+              Sign Up
             </h1>
             <p className='text-gray-500 dark:text-gray-400'>
-              Sign in to access your account
+              Sign up to create your account
             </p>
           </div>
           <div className='m-7'>
@@ -118,7 +118,7 @@ export default function Register({ session }: sessionProps) {
               <div className='mb-6'>
                 <button
                   type='submit'
-                  className='w-full px-3 py-4 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none'
+                  className='w-full px-3 py-4 text-white bg-gray-600 rounded-md focus:bg-indigo-600 hover:bg-gray-900 focus:outline-none'
                 >
                   Sign up
                 </button>

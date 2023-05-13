@@ -2,8 +2,10 @@ import '@/styles/globals.css'
 import supabase from '@/utils/supabase'
 import { Auth } from '@supabase/auth-ui-react'
 import type { AppProps } from 'next/app'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import Login from './login'
+import Register from './register'
 
 type sessionType = {
   access_token: string,
@@ -15,6 +17,7 @@ type sessionType = {
 
 export default function App({ Component, pageProps }: AppProps) {
   const [session, setSession] = useState<sessionType | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -26,6 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [])
 
   if (!session) {
+    if (router.pathname === '/register') return <Register session={session}/>
     return <Login session={session} />
   }
 
