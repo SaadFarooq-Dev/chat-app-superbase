@@ -1,11 +1,6 @@
 import Groups from '@/components/groups'
-import Head from '@/components/hello'
-import MessageForm from '@/components/messageForm'
-import Messages from '@/components/messages'
 import NavBar from '@/components/navBar'
 import supabase from '@/utils/supabase'
-import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
@@ -41,10 +36,15 @@ export default function Home() {
     getRooms()
   }, []);
 
+  useEffect(() => {
+    console.log(rooms);
+
+  }, [rooms]);
+
   return (
     <div>
       <NavBar />
-      <Groups handleCreateRoom={handleCreateRoom}/>
+      <Groups handleCreateRoom={handleCreateRoom} rooms={rooms}/>
     </div>
     // <div className='flex h-screen flex-col items-center justify-center py-2'>
     //   <Head />
