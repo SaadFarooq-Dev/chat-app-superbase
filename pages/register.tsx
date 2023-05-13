@@ -1,51 +1,143 @@
-import supabase from "@/utils/supabase";
-import { useRouter } from "next/router";
+import Loader from '@/components/loader'
+import supabase from '@/utils/supabase'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
-export default function Login (){
-  const router = useRouter();
-  const handleSubmit =  async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const {email,username,password} =  Object.fromEntries(new FormData(e.currentTarget));
-    if (typeof email === 'string' && typeof username === 'string'  && typeof password === 'string' ){
-      const {data,error} = await supabase.auth.signUp(
-        {
+type sessionProps = {
+  session: object | null
+}
+
+export default function Register({ session }: sessionProps) {
+  const [loading, setLoading] = useState(true)
+
+  const router = useRouter()
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const { email, username, password } = Object.fromEntries(
+      new FormData(e.currentTarget)
+    )
+    if (
+      typeof email === 'string' &&
+      typeof username === 'string' &&
+      typeof password === 'string'
+    ) {
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          data:{
+          data: {
             username
           }
         }
-      }
-    )
-    if(error){
-      alert(error.message)
-      return
-    }
-    router.push('/login')
+      })
 
+      if (error) {
+        alert(error.message)
+        return
+      }
+      router.push('/login')
+    }
   }
+
+  const handleLoginUser = async () => {
+    if (session) {
+      return router.push('/')
+    }
+    setLoading(false)
+  }
+  useEffect(() => {
+    handleLoginUser()
+  }, [])
+
+  if (loading) {
+    return <Loader loading={loading} />
   }
 
   return (
-    <div className="mx-auto min-w-full flex justify-center items-center max-w-2xl min-h-screen">
-    {/* <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} providers={['google']} /> */}
+    <div className='flex items-center min-h-screen bg-white dark:bg-gray-900'>
+      <div className='container mx-auto'>
+        <div className='max-w-md mx-auto my-10'>
+          <div className='text-center'>
+            <h1 className='my-3 text-3xl font-semibold text-gray-700 dark:text-gray-200'>
+              Sign in
+            </h1>
+            <p className='text-gray-500 dark:text-gray-400'>
+              Sign in to access your account
+            </p>
+          </div>
+          <div className='m-7'>
+            <form onSubmit={handleSubmit}>
+              <div className='mb-6'>
+                <label
+                  htmlFor='email'
+                  className='block mb-2 text-sm text-gray-600 dark:text-gray-400'
+                >
+                  Email Address
+                </label>
+                <input
+                  type='email'
+                  name='email'
+                  id='email'
+                  placeholder='you@company.com'
+                  className='w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500'
+                />
+              </div>
+              <div className='mb-6'>
+                <label
+                  htmlFor='text'
+                  className='block mb-2 text-sm text-gray-600 dark:text-gray-400'
+                >
+                  Username
+                </label>
+                <input
+                  type='text'
+                  name='username'
+                  id='username'
+                  placeholder='Kratos'
+                  className='w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500'
+                />
+              </div>
+              <div className='mb-6'>
+                <div className='flex justify-between mb-2'>
+                  <label
+                    htmlFor='password'
+                    className='text-sm text-gray-600 dark:text-gray-400'
+                  >
+                    Password
+                  </label>
+                </div>
+                <input
+                  type='password'
+                  name='password'
+                  id='password'
+                  placeholder='Your Password'
+                  className='w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500'
+                />
+              </div>
+              <div className='mb-6'>
+                <button
+                  type='submit'
+                  className='w-full px-3 py-4 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none'
+                >
+                  Sign up
+                </button>
+              </div>
 
-<form onSubmit={handleSubmit}>
-  <div className="mb-6">
-    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-    <input type="email" id="email" name='email' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@gmail.com" required />
-  </div>
-  <div className="mb-6">
-    <label htmlFor="text" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your username</label>
-    <input type="text" id="username" name='username' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
-  </div>
-  <div className="mb-6">
-    <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
-    <input type="password" id="password" name='password' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
-  </div>
-  <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Sign up</button>
-  </form>
-</div>
+              <p className='text-sm text-center text-gray-400'>
+                Already have an account?{' '}
+                <Link
+                  href='/login'
+                  className='text-indigo-400 focus:outline-none focus:underline focus:text-indigo-500 dark:focus:border-indigo-800'
+                >
+                  Sign in
+                </Link>
+                .
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

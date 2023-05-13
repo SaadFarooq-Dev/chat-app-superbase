@@ -49,6 +49,7 @@ export default function Home() {
           <input type="text" name='roomName' id='roomName' className="max-w-lg max-h-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
           <button type='submit' className='text-xs ml-3 bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 rounded'>New Room</button>
           </form>
+          <button className='px-3 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none' type="button" onClick={() => supabase.auth.signOut()}> Logout </button>
         </div>
         {/* <h1 className='text-xs ml-4 bg-gray-500 hover:bg-gray-900 text-white font-bold p-2 rounded-bl-lg rounded-tr-lg'><Link href='/rooms/e7a8dec4-8654-40e8-bf53-3d523b641705'>Join the classic room!</Link></h1> */}
           <div className='flex-1'>
