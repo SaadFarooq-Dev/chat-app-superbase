@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import supabase from "@/utils/supabase";
 import { useEffect, useRef, useState } from "react";
 import Loader from "./loader";

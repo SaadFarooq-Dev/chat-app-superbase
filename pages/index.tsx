@@ -49,7 +49,7 @@ export default function Slack({ session }: sessionProps) {
   return (
     <>
       <div className="container mx-auto shadow-lg rounded-lg">
-        <NavBar />
+        <NavBar roomId={activeRoom ? activeRoom.id : ''}/>
         <div className="flex flex-row justify-between bg-white" style={{ minHeight: '90vh', maxHeight: '90vh' }}>
           <div className="flex flex-col w-2/5 border-r-2 overflow-y-auto">
             <div className="border-b-2 py-4 px-2">
