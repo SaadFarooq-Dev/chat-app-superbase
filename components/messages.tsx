@@ -1,5 +1,6 @@
 import supabase from "@/utils/supabase";
 import { useEffect, useRef, useState } from "react";
+import Loader from "./loader";
 
 type Message = {
   id: string,
@@ -17,18 +18,19 @@ type MessagesProps = {
 }
 let profileCache: any = {}
 
-export default function Messages({roomId}: MessagesProps) {
+export default function Messages({ roomId }: MessagesProps) {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [userId, setuserId] = useState('');
   const messagesEndRef = useRef<null | HTMLDivElement>(null)
+  const [loading, setLoading] = useState(true)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "auto" })
   }
 
   const getData = async () => {
-    const { data, error } = await supabase.from('messages').select('*,profile: profiles(id,username)').match({room_id: roomId}).order('created_at')
+    const { data, error } = await supabase.from('messages').select('*,profile: profiles(id,username)').match({ room_id: roomId }).order('created_at')
     if (error) {
       console.error(error.message)
     }
@@ -40,56 +42,66 @@ export default function Messages({roomId}: MessagesProps) {
       profileCache[profile.id] = profile
     })
     setMessages(data as Message[])
+    setLoading(false)
   }
 
-  const getUser = async ()=>{
+  const getUser = async () => {
     const userId = (await supabase.auth.getUser())?.data?.user?.id
-    if(userId){
+    if (userId) {
       setuserId(userId)
     }
   }
   useEffect(() => {
+    setLoading(true)
     getUser()
     getData()
-  }, []);
+  }, [roomId]);
 
   useEffect(() => {
-    const subscription = supabase.channel('any').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages',filter: `room_id=eq.${roomId}` },
-    async payload => {
-      if(payload && profileCache[payload.new.profile_id]){
-        setMessages((prevMessages)=> [...prevMessages,{...payload.new, profile: profileCache[payload.new.profile_id]}] as Message[])
-      }
-      else {
-        const {data, error} = await supabase.from('profiles').select('id, username').eq('id',payload.new.profile_id)
-        if(error){
-          alert(error.message)
-          console.error(error.message)
+    const subscription = supabase.channel('any').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `room_id=eq.${roomId}` },
+      async payload => {
+        if (payload && profileCache[payload.new.profile_id]) {
+          setMessages((prevMessages) => [...prevMessages, { ...payload.new, profile: profileCache[payload.new.profile_id] }] as Message[])
         }
-        if(data){
-          profileCache[data[0].id] = data[0]
-          const newMessage = { ...payload.new, profile: data[0] };
-          setMessages((prevMessages)=> [...prevMessages,newMessage] as Message[])
+        else {
+          const { data, error } = await supabase.from('profiles').select('id, username').eq('id', payload.new.profile_id)
+          if (error) {
+            alert(error.message)
+            console.error(error.message)
+          }
+          if (data) {
+            profileCache[data[0].id] = data[0]
+            const newMessage = { ...payload.new, profile: data[0] };
+            setMessages((prevMessages) => [...prevMessages, newMessage] as Message[])
+          }
         }
-      }
-    }).subscribe()
+      }).subscribe()
     return () => {
       supabase.removeChannel(subscription)
     }
-  }, []);
+  }, [roomId]);
+
   useEffect(() => {
     scrollToBottom()
   }, [messages]);
 
+  if (loading) {
+    return <Loader loading={loading} left={'60%'} />
+  }
 
   return (
-<ul className="flex flex-1 flex-col justify-end p-4 space-y-2">
-      {messages.map((item) => (
-        <li key={item.id} className={item.profile_id === userId ? 'self-end bg-orange-100 rounded px-3 py-1': 'bg-slate-200 self-start rounded px-3 py-1'} >
-          <span className="block text-xs text-gray-500 font-thin">{item.profile.username}</span>
-            <span className="block text-gray-900">{item.content}</span>
-        </li>
-      ))}
-      <span ref={messagesEndRef}/>
-    </ul>
+      <div className="w-full px-5 flex flex-col justify-between">
+        <div className="flex flex-col mt-5">
+          {messages.map((item) => (
+            <div key={item.id} className={`${item.profile_id === userId ? 'flex justify-end mb-4' : 'flex justify-start mb-4'} `}>
+              <div className={`${item.profile_id === userId ? 'mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white' : 'ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white'}`} >
+                <span className="block text-xs text-slate-950 font-medium">{item.profile.username}</span>
+                <span className="">{item.content}</span>
+              </div>
+            </div>
+          ))}
+          <span ref={messagesEndRef} />
+        </div>
+      </div>
   )
 }

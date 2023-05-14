@@ -17,12 +17,8 @@ export default function NavBar() {
   }
   return (
     <>
-      <nav className="flex bg-gray-100 items-center relative justify-between px-80 py-3 mb-3 w-full">
-        <div>
-          <h1>
-            Chat-App
-          </h1>
-        </div>
+      <nav className="px-5 py-5 flex justify-between items-center bg-white border-b-2">
+      <div className="font-semibold text-2xl">Chat-App</div>
         <ul id="drawer" role="menu" className="sm:gap-3 transition-left ease-[cubic-bezier(0.4, 0.0, 0.2, 1)] delay-150  sm:flex  flex flex-col cursor-pointer absolute min-h-screen -left-48 sm:static w-48 top-0 bg-white sm:shadow-none shadow-xl sm:bg-transparent sm:flex-row sm:w-auto sm:min-h-0 dark:bg-slate-900  ">
           <div className="sm:hidden p-6 mb-5 flex items-center justify-center">
             <svg width="41" height="39" viewBox="0 0 41 39" fill="none" xmlns="http://www.w3.org/2000/svg">
