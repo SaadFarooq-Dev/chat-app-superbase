@@ -1,7 +1,5 @@
-import supabase from "@/utils/supabase"
 import Image from "next/image"
 import Link from "next/link"
-
 
 type Room = {
   id: string,
@@ -13,7 +11,6 @@ type GroupsProps = {
   handleCreateRoom: (e: React.FormEvent<HTMLFormElement>) => Promise<void>,
   rooms: Room[]
 }
-
 
 export default function Groups({ handleCreateRoom, rooms }: GroupsProps) {
   return (
@@ -42,43 +39,6 @@ export default function Groups({ handleCreateRoom, rooms }: GroupsProps) {
                 </div>
               ))
             }
-
-            {/* <div className="relative group bg-gray-900 py-10 sm:py-20 px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/80 hover:smooth-hover">
-          <Image width={20} height={20} className="w-20 h-20 object-cover object-center rounded-full" src="https://picsum.photos/200/300" alt="art" />
-          <h4 className="text-white text-2xl font-bold capitalize text-center">Art</h4>
-          <p className="text-white/50">132 members</p>
-          <p className="absolute top-2 text-white/20 inline-flex items-center text-xs"> Active <span className="ml-2 w-2 h-2 block bg-green-500 rounded-full group-hover:animate-pulse"></span></p>
-        </div>
-        <div className="relative group bg-gray-900 py-10 sm:py-20 px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/80 hover:smooth-hover">
-          <Image width={20} height={20} className="w-20 h-20 object-cover object-center rounded-full" src="https://picsum.photos/200/300" alt="gaming" />
-          <h4 className="text-white text-2xl font-bold capitalize text-center">Gaming</h4>
-          <p className="text-white/50">207 members</p>
-          <p className="absolute top-2 text-white/20 inline-flex items-center text-xs"> Active <span className="ml-2 w-2 h-2 block bg-green-500 rounded-full group-hover:animate-pulse"></span></p>
-        </div>
-        <div className="relative group bg-gray-900 py-10 sm:py-20 px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/80 hover:smooth-hover">
-          <Image width={20} height={20} className="w-20 h-20 object-cover object-center rounded-full" src="https://picsum.photos/200/300" alt="cinema" />
-          <h4 className="text-white text-2xl font-bold capitalize text-center">cinema</h4>
-          <p className="text-white/50">105 members</p>
-          <p className="absolute top-2 text-white/20 inline-flex items-center text-xs">Active <span className="ml-2 w-2 h-2 block bg-green-500 rounded-full group-hover:animate-pulse"></span></p>
-        </div>
-        <div className="relative group bg-gray-900 py-10 sm:py-20 px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/80 hover:smooth-hover">
-          <Image width={20} height={20} className="w-20 h-20 object-cover object-center rounded-full" src="https://picsum.photos/200/300" alt="song" />
-          <h4 className="text-white text-2xl font-bold capitalize text-center">Song</h4>
-          <p className="text-white/50">67 members</p>
-          <p className="absolute top-2 text-white/20 inline-flex items-center text-xs"> Active <span className="ml-2 w-2 h-2 block bg-green-500 rounded-full group-hover:animate-pulse"></span></p>
-        </div>
-        <div className="relative group bg-gray-900 py-10 sm:py-20 px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/80 hover:smooth-hover">
-          <Image width={20} height={20} className="w-20 h-20 object-cover object-center rounded-full" src="https://picsum.photos/200/300" alt="code" />
-          <h4 className="text-white text-2xl font-bold capitalize text-center">Code</h4>
-          <p className="text-white/50">83 members</p>
-          <p className="absolute top-2 text-white/20 inline-flex items-center text-xs"> Active <span className="ml-2 w-2 h-2 block bg-green-500 rounded-full group-hover:animate-pulse"></span></p>
-        </div>
-        <div className="relative group bg-gray-900 py-10 sm:py-20 px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/80 hover:smooth-hover">
-          <Image width={20} height={20} className="w-20 h-20 object-cover object-center rounded-full" src="https://picsum.photos/200/300" alt="dancing" />
-          <h4 className="text-white text-2xl font-bold capitalize text-center">Dancing</h4>
-          <p className="text-white/50">108 members</p>
-          <p className="absolute top-2 text-white/20 inline-flex items-center text-xs"> Active <span className="ml-2 w-2 h-2 block bg-green-500 rounded-full group-hover:animate-pulse"></span></p>
-        </div> */}
           </div>
         </div>
       </div>

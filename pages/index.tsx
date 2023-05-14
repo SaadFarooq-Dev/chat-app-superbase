@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Groups from '@/components/groups'
+import Loader from '@/components/loader'
 import NavBar from '@/components/navBar'
 import supabase from '@/utils/supabase'
 import { useRouter } from 'next/router'
@@ -10,13 +12,19 @@ type Room = {
   created_at: string,
 }
 
-export default function Home() {
+type sessionProps = {
+  session: object | null
+}
+
+export default function Home({ session }: sessionProps) {
   const router = useRouter();
   const [rooms, setRooms] = useState<Room[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const handleCreateRoom = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { roomName } = Object.fromEntries(new FormData(e.currentTarget));
-    const { data, error } = await supabase.rpc('create_room',{ name: roomName }).single<Room>()
+    const { data, error } = await supabase.rpc('create_room', { name: roomName }).single<Room>()
     if (error) {
       alert(error.message)
       return
@@ -26,9 +34,9 @@ export default function Home() {
     }
 
   }
-  const getRooms = async () =>{
-    const {data,error} = await supabase.from('rooms').select('*').order('created_at',{ascending: false})
-    if(data){
+  const getRooms = async () => {
+    const { data, error } = await supabase.from('rooms').select('*').order('created_at', { ascending: false })
+    if (data) {
       setRooms(data as Room[])
     }
   }
@@ -37,14 +45,22 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    console.log(rooms);
+    if (!session) {
+      router.push('/login')
+    }
+    else {
+      setLoading(false)
+    }
+  }, []);
 
-  }, [rooms]);
+  if (loading) {
+    return <Loader loading={loading} />
+  }
 
   return (
     <div>
       <NavBar />
-      <Groups handleCreateRoom={handleCreateRoom} rooms={rooms}/>
+      <Groups handleCreateRoom={handleCreateRoom} rooms={rooms} />
     </div>
     // <div className='flex h-screen flex-col items-center justify-center py-2'>
     //   <Head />

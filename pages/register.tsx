@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Loader from '@/components/loader'
 import supabase from '@/utils/supabase'
 import Link from 'next/link'

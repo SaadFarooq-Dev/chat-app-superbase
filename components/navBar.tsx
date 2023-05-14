@@ -1,16 +1,26 @@
+import supabase from '@/utils/supabase';
+import { useRouter } from "next/router";
 import { useState } from "react";
-import supabase from '@/utils/supabase'
 
 export default function NavBar() {
+  const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
-
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut()
+      return router.push('/login')
+    } catch (error) {
+      console.error("Something went wrong!")
+      throw new Error('Something went wrong!')
+    }
+  }
   return (
     <>
       <nav className="flex bg-gray-100 items-center relative justify-between px-80 py-3 mb-3 w-full">
         <div>
           <h1>
-          Chat-App
+            Chat-App
           </h1>
         </div>
         <ul id="drawer" role="menu" className="sm:gap-3 transition-left ease-[cubic-bezier(0.4, 0.0, 0.2, 1)] delay-150  sm:flex  flex flex-col cursor-pointer absolute min-h-screen -left-48 sm:static w-48 top-0 bg-white sm:shadow-none shadow-xl sm:bg-transparent sm:flex-row sm:w-auto sm:min-h-0 dark:bg-slate-900  ">
@@ -33,7 +43,7 @@ export default function NavBar() {
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
                   </span>
-                  <span onClick={() => supabase.auth.signOut()} > Logout </span>
+                  <span onClick={handleLogout} > Logout </span>
                 </li>
 
               </ul>

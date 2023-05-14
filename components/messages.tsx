@@ -49,7 +49,7 @@ export default function Messages({roomId}: MessagesProps) {
     }
   }
   useEffect(() => {
-    getUser() 
+    getUser()
     getData()
   }, []);
 
