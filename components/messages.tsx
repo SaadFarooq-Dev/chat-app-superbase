@@ -87,22 +87,33 @@ export default function Messages({ roomId }: MessagesProps) {
   }, [messages]);
 
   if (loading) {
-    return <Loader loading={loading} left={'60%'} />
+    return <Loader loading={loading} left={'63%'} />
   }
 
   return (
-      <div className="w-full px-5 flex flex-col justify-between">
-        <div className="flex flex-col mt-5">
-          {messages.map((item) => (
-            <div key={item.id} className={`${item.profile_id === userId ? 'flex justify-end mb-4' : 'flex justify-start mb-4'} `}>
-              <div className={`${item.profile_id === userId ? 'mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white' : 'ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white'}`} >
-                <span className="block text-xs text-slate-950 font-medium">{item.profile.username}</span>
-                <span className="">{item.content}</span>
-              </div>
+    <div className="w-full px-5 flex flex-col justify-between">
+      <div className="flex flex-col mt-5">
+        {messages.length > 0 ? messages.map((item) => (
+          <div key={item.id} className={`${item.profile_id === userId ? 'flex justify-end mb-4' : 'flex justify-start mb-4'} `}>
+            <div className={`${item.profile_id === userId ? 'mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white' : 'ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white'}`} >
+              <span className="block text-xs text-slate-950 font-medium">{item.profile.username}</span>
+              <span className="">{item.content}</span>
             </div>
-          ))}
-          <span ref={messagesEndRef} />
-        </div>
+          </div>
+        )) : <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '63%',
+            transform: 'translate(-50%, -90%)',
+            padding: '10px'
+          }}
+        >
+          <h1 className="font-extrabold text-lg">Be the first to say hello! 👋</h1>
+
+        </div>}
+        <span ref={messagesEndRef} />
       </div>
+    </div>
   )
 }
