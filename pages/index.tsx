@@ -24,6 +24,7 @@ export default function Slack({ session }: sessionProps) {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [activeRoom, setActiveRoom] = useState<Room>()
   const [loading, setLoading] = useState(true)
+  const [filter, setFilter] = useState('')
 
   const getRooms = async () => {
     const { data, error } = await supabase.from('rooms').select('*').order('created_at', { ascending: false })
@@ -31,6 +32,20 @@ export default function Slack({ session }: sessionProps) {
       setRooms(data as Room[])
       setActiveRoom(data[0] as Room)
       setLoading(false)
+    }
+  }
+
+  const handleCreateRoom = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const { roomName } = Object.fromEntries(new FormData(e.currentTarget));
+    const { data, error } = await supabase.rpc('create_room', { name: roomName }).single<Room>()
+    if (error) {
+      alert(error.message)
+      return
+    }
+    if (data) {
+      setActiveRoom(data)
+      rooms.unshift(data)
     }
   }
 
@@ -49,7 +64,7 @@ export default function Slack({ session }: sessionProps) {
   return (
     <>
       <div className="container mx-auto shadow-lg rounded-lg">
-        <NavBar roomId={activeRoom ? activeRoom.id : ''}/>
+        <NavBar roomId={activeRoom ? activeRoom.id : ''} handleCreateRoom={handleCreateRoom} />
         <div className="flex flex-row justify-between bg-white" style={{ minHeight: '90vh', maxHeight: '90vh' }}>
           <div className="flex flex-col w-2/5 border-r-2 overflow-y-auto">
             <div className="border-b-2 py-4 px-2">
@@ -57,11 +72,12 @@ export default function Slack({ session }: sessionProps) {
                 type="text"
                 placeholder="search chatting"
                 className="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full"
+                onChange={(e) => setFilter(e.target.value)}
               />
             </div>
 
             {
-              rooms.map(room => (
+              rooms.filter(val => val.name ? val.name.includes(filter) : false).map(room => (
                 <div key={room.id} className={`flex flex-row py-4 px-2 justify-center items-center border-b-2 ${room.id === activeRoom?.id ? 'border-l-4 border-blue-400 ' : ''} `}>
                   <div className="w-1/4">
                     <Image
