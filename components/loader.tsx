@@ -1,21 +1,22 @@
 import { RingLoader } from "react-spinners";
 
 type loaderProps = {
-  loading: boolean
+  loading: boolean,
+  left?: string
 }
 
-export default function Loader({loading}: loaderProps) {
+export default function Loader({loading, left}: loaderProps) {
   return (
     <RingLoader
     loading={loading}
     cssOverride = {{
       position: 'absolute',
       top: '50%',
-      left: '50%',
+      left: left || '50%',
       transform: 'translate(-50%, -50%)',
       padding: '10px'
     }}
-    color={'#36d7b7'}
+    color={'#002D62'}
     aria-label="Loading Spinner"
     data-testid="loader"
   />

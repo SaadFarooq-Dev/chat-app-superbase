@@ -1,4 +1,3 @@
-import Head from "@/components/hello";
 import MessageForm from "@/components/messageForm";
 import Messages from "@/components/messages";
 import supabase from "@/utils/supabase";
@@ -26,7 +25,6 @@ export default function Room() {
 
   return (
     <div className='flex h-screen flex-col items-center justify-center py-2'>
-      <Head />
       <main className="flex w-full h-full flex-1 flex-col items-center px-20">
         <div className="w-full flex justify-between max-h-14 px-2 py-3">
           <h1 className='text-4xl'><Link href={'/'}>Chat App</Link></h1>
