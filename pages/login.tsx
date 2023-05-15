@@ -35,6 +35,21 @@ export default function Login({ session }: sessionProps) {
     }
     setLoading(false)
   }
+  const handleDummyLogin = async () => {
+    const email = 'abc@dummy.com'
+    const password = '123456'
+    const { error } = await supabase.auth.signInWithPassword(
+      {
+        email,
+        password,
+      }
+    )
+    if (error) {
+      alert(error.message)
+      return
+    }
+    router.push('/')
+  }
   useEffect(() => {
     handleLoginUser()
   }, []);
@@ -69,6 +84,7 @@ export default function Login({ session }: sessionProps) {
               </div>
               <p className="text-sm text-center text-gray-400">Don&#x27;t have an account yet? <Link href="/register" className="text-indigo-400 focus:outline-none focus:underline focus:text-indigo-600 dark:focus:border-indigo-800 hover:text-indigo-900">Sign up</Link>.</p>
             </form>
+            <button type="submit" className=" mt-10 w-full px-3 py-4 text-white bg-gray-600 rounded-md hover:bg-gray-900 focus:outline-none" onClick={handleDummyLogin}>Dummy Sign In</button>
           </div>
         </div>
       </div>
